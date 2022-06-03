@@ -46,7 +46,7 @@ def get_UN_data():
 
 try:
     df = get_UN_data()
-    if (df != 0):
+    if df != 0:
         countries = st.multiselect(
             "Choose countries", list(df.index), ["ZAR", "SLFA1"]
         )
