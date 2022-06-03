@@ -5,6 +5,8 @@ import pandas as pd
 import streamlit as st
 import s3fs
 from datetime import datetime, timedelta
+import sys
+
 
 """
 # Welcome to Streamlit!
@@ -34,7 +36,7 @@ def get_UN_data():
     try:
         df = pd.read_csv(f"s3://{AWS_S3_BUCKET}/{key}",)
         return df.set_index("InstrumentCode")
-    except URLError as e:
+    except Exception as e:
         st.error(
             """
             **This demo requires internet access.**
