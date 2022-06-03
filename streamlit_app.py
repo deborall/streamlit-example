@@ -36,7 +36,7 @@ def get_UN_data():
     st.write('You selected:', option)
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
     AWS_S3_BUCKET = "sanne-eod"
-    key = "CashAccount_"+d_formatted+"_SLTWWF.csv"
+    key = option+"_"+d_formatted+"_SLTWWF.csv"
     st.write('File Key', key) 
     #content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
     try:
