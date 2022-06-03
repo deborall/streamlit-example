@@ -14,6 +14,7 @@ import sys
 
 Select the Date to view and also the File Type
 
+
 """
 fs = s3fs.S3FileSystem(anon=False)
 
@@ -42,7 +43,7 @@ def get_UN_data():
         #"Choose countries", list(df.index), ["ZAR", "SLFA1"]
         #)
         data = df 
-        st.table(data)
+        st.dataframe(data, width=900)
         #if not countries:
         #    st.error("Please select at least one account.")
         #else:
