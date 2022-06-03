@@ -1,4 +1,5 @@
 from collections import namedtuple
+from genericpath import exists
 import altair as alt
 import math
 import pandas as pd
@@ -35,7 +36,32 @@ def get_UN_data():
     #content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
     try:
         df = pd.read_csv(f"s3://{AWS_S3_BUCKET}/{key}",)
-        return df.set_index("InstrumentCode")
+        df = df.set_index("InstrumentCode")
+        countries = st.multiselect(
+        "Choose countries", list(df.index), ["ZAR", "SLFA1"]
+        )
+        if not countries:
+            st.error("Please select at least one account.")
+        else:
+            data = df.loc[countries]
+            st.table(data)
+            #data /= 1000000.0
+            #st.write("### Gross Agricultural Production ($B)", data.sort_index())
+
+            # data = data.T.reset_index()
+            # data = pd.melt(data, id_vars=["index"]).rename(
+            #     columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
+            # )
+            # chart = (
+            #     alt.Chart(data)
+            #     .mark_area(opacity=0.3)
+            #     .encode(
+            #         x="year:T",
+            #         y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
+            #         color="Region:N",
+            #     )
+            # )
+            # st.altair_chart(chart, use_container_width=True)
     except Exception as e:
         st.error(
             """
@@ -47,34 +73,4 @@ def get_UN_data():
         return "ERROR"
 
 
-df = get_UN_data()
-if df != "ERROR":
-    countries = st.multiselect(
-        "Choose countries", list(df.index), ["ZAR", "SLFA1"]
-    )
-    if not countries:
-        st.error("Please select at least one account.")
-    else:
-        data = df.loc[countries]
-        st.table(data)
-        #data /= 1000000.0
-        #st.write("### Gross Agricultural Production ($B)", data.sort_index())
-
-        # data = data.T.reset_index()
-        # data = pd.melt(data, id_vars=["index"]).rename(
-        #     columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
-        # )
-        # chart = (
-        #     alt.Chart(data)
-        #     .mark_area(opacity=0.3)
-        #     .encode(
-        #         x="year:T",
-        #         y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
-        #         color="Region:N",
-        #     )
-        # )
-        # st.altair_chart(chart, use_container_width=True)
-else:
-        st.error("Date not active")
-
-
+output = get_UN_data()
