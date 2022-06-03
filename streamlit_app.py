@@ -43,7 +43,7 @@ def get_UN_data():
         #"Choose countries", list(df.index), ["ZAR", "SLFA1"]
         #)
         data = df 
-        st.dataframe(data, width=900)
+        st.dataframe(data, width=1200)
         #if not countries:
         #    st.error("Please select at least one account.")
         #else:
