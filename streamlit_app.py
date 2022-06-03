@@ -4,6 +4,7 @@ import math
 import pandas as pd
 import streamlit as st
 import s3fs
+from datetime import datetime
 
 """
 # Welcome to Streamlit!
@@ -22,7 +23,8 @@ def read_file(filename):
         return f.read().decode("utf-8")
 
 def get_UN_data():
-    
+    d = st.date_input("Select Date to view", datetime.now())
+    st.write('Your birthday is:', d) 
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
     AWS_S3_BUCKET = "sanne-eod"
     key = "CashAccount_20220413_SLTWWF.csv"
