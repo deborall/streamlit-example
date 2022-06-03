@@ -68,8 +68,8 @@ def get_UN_data():
     except Exception as e:
         st.error(
             """
-            **This demo requires internet access.**
-            Connection error: %s
+            **Some error occured**
+            Detail: %s
         """
             % str(e)
             )
