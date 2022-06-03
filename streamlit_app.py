@@ -46,42 +46,35 @@ def get_UN_data():
             )
         return 0
 
-try:
-    df = get_UN_data()
-    if df != 0:
-        countries = st.multiselect(
-            "Choose countries", list(df.index), ["ZAR", "SLFA1"]
-        )
-        if not countries:
-            st.error("Please select at least one account.")
-        else:
-            data = df.loc[countries]
-            st.table(data)
-            #data /= 1000000.0
-            #st.write("### Gross Agricultural Production ($B)", data.sort_index())
 
-            # data = data.T.reset_index()
-            # data = pd.melt(data, id_vars=["index"]).rename(
-            #     columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
-            # )
-            # chart = (
-            #     alt.Chart(data)
-            #     .mark_area(opacity=0.3)
-            #     .encode(
-            #         x="year:T",
-            #         y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
-            #         color="Region:N",
-            #     )
-            # )
-            # st.altair_chart(chart, use_container_width=True)
+df = get_UN_data()
+if df != 0:
+    countries = st.multiselect(
+        "Choose countries", list(df.index), ["ZAR", "SLFA1"]
+    )
+    if not countries:
+        st.error("Please select at least one account.")
     else:
-         st.error("Date not active")
+        data = df.loc[countries]
+        st.table(data)
+        #data /= 1000000.0
+        #st.write("### Gross Agricultural Production ($B)", data.sort_index())
 
-except Exception as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
-    """
-        % e.reason
-        )
+        # data = data.T.reset_index()
+        # data = pd.melt(data, id_vars=["index"]).rename(
+        #     columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
+        # )
+        # chart = (
+        #     alt.Chart(data)
+        #     .mark_area(opacity=0.3)
+        #     .encode(
+        #         x="year:T",
+        #         y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
+        #         color="Region:N",
+        #     )
+        # )
+        # st.altair_chart(chart, use_container_width=True)
+else:
+        st.error("Date not active")
+
+
