@@ -30,6 +30,10 @@ def get_UN_data():
     d = st.date_input("Select Date to view", datetime.now() - timedelta(days=days_to_subtract))
     d_formatted = d.strftime("%Y%m%d")
     st.write('Selected Date is', d_formatted) 
+    option = st.selectbox(
+     label='Which file do you want to view?',
+     options=('PortfolioValuationAndHolding', 'CashAccount', 'IncomeData', 'Transactions'), index=0)
+    st.write('You selected:', option)
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
     AWS_S3_BUCKET = "sanne-eod"
     key = "CashAccount_"+d_formatted+"_SLTWWF.csv"
