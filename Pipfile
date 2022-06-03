@@ -9,6 +9,7 @@ pandas = "*"
 streamlit = "*"
 boto3 = "*"
 plotly = "*"
+s3fs = "*"
 
 
 [dev-packages]
