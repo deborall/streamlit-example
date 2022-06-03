@@ -77,7 +77,7 @@ try:
     else:
          st.error("Date not active")
 
-except URLError as e:
+except Exception as e:
     st.error(
         """
         **This demo requires internet access.**
