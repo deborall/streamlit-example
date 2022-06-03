@@ -33,6 +33,7 @@ def get_UN_data():
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
     AWS_S3_BUCKET = "sanne-eod"
     key = "CashAccount_"+d_formatted+"_SLTWWF.csv"
+    st.write('File Key', key) 
     #content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
     try:
         df = pd.read_csv(f"s3://{AWS_S3_BUCKET}/{key}",)
@@ -68,7 +69,7 @@ def get_UN_data():
             **This demo requires internet access.**
             Connection error: %s
         """
-            % str(e + key)
+            % str(e)
             )
         return "ERROR"
 
