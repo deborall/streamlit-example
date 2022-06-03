@@ -4,7 +4,7 @@ import altair as alt
 import math
 import pandas as pd
 import streamlit as st
-#import s3fs
+import s3fs
 from datetime import datetime, timedelta
 import sys
 import boto3
