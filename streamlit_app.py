@@ -8,6 +8,9 @@ import streamlit as st
 from datetime import datetime, timedelta
 import sys
 import boto3
+import json
+import plotly.express as px
+
 
 """
 # SANNE Files
@@ -17,10 +20,9 @@ Select the Date to view and also the File Type
 
 """
 fs = s3fs.S3FileSystem(anon=False)
+#AWS_S3_BUCKET = "sanne-eod"
+AWS_S3_BUCKET = "options.eod"
 
-def read_file(filename):
-    with fs.open(filename) as f:
-        return f.read().decode("utf-8")
 
 def get_transaction_data():
     days_to_subtract = 1
@@ -32,7 +34,7 @@ def get_transaction_data():
      options=('PortfolioValuationAndHolding', 'CashAccount', 'IncomeData', 'Transactions'), index=0)
     st.write('You selected:', option)
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
-    AWS_S3_BUCKET = "sanne-eod"
+    
     key = option+"_"+d_formatted+"_SLTWWF.csv"
     st.write('File Key', key) 
     #content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
@@ -76,17 +78,87 @@ def get_transaction_data():
             )
         return "ERROR"
 
-def get_list_of_files():
+@st.cache()
 
+def get_list_of_files():
+    
 
     s3 = boto3.resource('s3')
-    my_bucket = s3.Bucket('option.eod')
+    my_bucket = s3.Bucket('options.eod')
+    file_list = []
+    for object_summary in my_bucket.objects.filter(Prefix=""):
+        file_list.append(object_summary.key)
+    
 
-    for object_summary in my_bucket.objects.filter(Prefix="2022-06-03/"):
-        file_list = print(object_summary.key)
-    st.table(file_list)
+    return file_list
+
+
+def read_file(filename):
+    file_ref = AWS_S3_BUCKET + "/" + filename
+    with fs.open(file_ref) as f:
+        return f.read().decode("utf-8")
+
+def load_data(key):
+    #with open('TME.US.json') as data_file:    
+    #    data = json.load(data_file)
+
+    raw_data = read_file(key) 
+    data = json.loads(raw_data)
+    #st.text(data)
+    
+    #options_data = pd.json_normalize(data['data'][0]['options'][option_type])
+    options_df = None
+    options_list = data['data']
+
+    for expiry_item in options_list:
+        KEY_ERROR = "NO_TIGGER"
+        try:
+            call_items = pd.json_normalize(expiry_item['options']['CALL'])
+        except KeyError as e:
+            KEY_ERROR = "CALL_ERROR_TRIGGERED"
+            continue
+        
+        try:
+            put_items = pd.json_normalize(expiry_item['options']['PUT'])
+        except KeyError as e:
+            KEY_ERROR = "PUT_ERROR_TRIGGERED"
+            continue
+
+        if KEY_ERROR == "NO_TRIGGER":
+            combined_df = pd.concat([call_items, put_items])
+        elif KEY_ERROR == "CALL_ERROR_TRIGGERED":
+            combined_df = put_items
+        elif KEY_ERROR == "PUT_ERROR_TRIGGERED":
+            combined_df = call_items
+        else: 
+            combined_df = pd.concat([call_items, put_items])
+        if options_df is None:
+          options_df = combined_df
+        else:
+          options_df = pd.concat([options_df, combined_df])
+
+        
+    #options_data = pd.json_normalize()
+    return options_df
+
 
 
 
 #output = get_transaction_data()
-output2 =  get_list_of_files()
+
+file_list =  get_list_of_files()
+file_selected = st.selectbox("Select the file that you want", sorted(file_list,reverse=True))
+option_type = st.selectbox("Type", ['CALL', 'PUT'], 0)
+options_data = load_data(file_selected)
+#st.text(options_data)
+expiration_selected = st.selectbox(label="Expiry Date", options=options_data['expirationDate'].unique(), index=0)
+selectedData = options_data[(options_data['expirationDate'] == expiration_selected) & (options_data['impliedVolatility'] > 0) & (options_data['type'] == option_type)]
+
+
+#st.altair_chart(selectedData[['strike', 'impliedVolatility']], use_container_width=True)
+fig = px.scatter(selectedData[['strike','impliedVolatility']], x="strike", y="impliedVolatility")
+st.plotly_chart(fig, use_container_width=True)
+st.dataframe(selectedData)
+
+
+

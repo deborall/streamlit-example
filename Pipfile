@@ -7,6 +7,7 @@ name = "pypi"
 altair = "*"
 pandas = "*"
 streamlit = "*"
+boto3 = "*"
 
 [dev-packages]
 
