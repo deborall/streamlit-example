@@ -68,7 +68,7 @@ def get_UN_data():
             **This demo requires internet access.**
             Connection error: %s
         """
-            % str(e)
+            % str(e + key)
             )
         return "ERROR"
 
