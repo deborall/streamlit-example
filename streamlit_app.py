@@ -44,11 +44,11 @@ def get_UN_data():
         """
             % e.reason
             )
-        return 0
+        return "ERROR"
 
 
 df = get_UN_data()
-if df != 0:
+if df != "ERROR":
     countries = st.multiselect(
         "Choose countries", list(df.index), ["ZAR", "SLFA1"]
     )
