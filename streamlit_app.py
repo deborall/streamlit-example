@@ -4,7 +4,7 @@ import math
 import pandas as pd
 import streamlit as st
 import s3fs
-from datetime import datetime
+from datetime import datetime, timedelta
 
 """
 # Welcome to Streamlit!
@@ -23,7 +23,8 @@ def read_file(filename):
         return f.read().decode("utf-8")
 
 def get_UN_data():
-    d = st.date_input("Select Date to view", datetime.now())
+    days_to_subtract = 1
+    d = st.date_input("Select Date to view", datetime.now() - timedelta(days=days_to_subtract))
     d_formatted = d.strftime("%Y%m%d")
     st.write('Selected Date is', d_formatted) 
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
