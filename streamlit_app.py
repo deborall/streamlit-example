@@ -7,7 +7,7 @@ import streamlit as st
 import s3fs
 from datetime import datetime, timedelta
 import sys
-
+import boto3
 
 """
 # SANNE Files
@@ -22,7 +22,7 @@ def read_file(filename):
     with fs.open(filename) as f:
         return f.read().decode("utf-8")
 
-def get_UN_data():
+def get_transaction_data():
     days_to_subtract = 1
     d = st.date_input("Select Date to view", datetime.now() - timedelta(days=days_to_subtract))
     d_formatted = d.strftime("%Y%m%d")
@@ -76,5 +76,17 @@ def get_UN_data():
             )
         return "ERROR"
 
+def get_list_of_files():
 
-output = get_UN_data()
+
+    s3 = boto3.resource('s3')
+    my_bucket = s3.Bucket('option.eod')
+
+    for object_summary in my_bucket.objects.filter(Prefix="2022-06-03/"):
+        file_list = print(object_summary.key)
+    st.table(file_list)
+
+
+
+output = get_transaction_data()
+def get_list_of_files()

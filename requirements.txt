@@ -2,3 +2,4 @@ altair
 pandas
 streamlit
 s3fs
+boto3
