@@ -89,4 +89,4 @@ def get_list_of_files():
 
 
 output = get_transaction_data()
-def get_list_of_files()
+output2 =  get_list_of_files()
