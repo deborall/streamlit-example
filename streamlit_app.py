@@ -38,14 +38,16 @@ def get_UN_data():
     try:
         df = pd.read_csv(f"s3://{AWS_S3_BUCKET}/{key}",)
         df = df.set_index("InstrumentCode")
-        countries = st.multiselect(
-        "Choose countries", list(df.index), ["ZAR", "SLFA1"]
-        )
-        if not countries:
-            st.error("Please select at least one account.")
-        else:
-            data = df.loc[countries]
-            st.table(data)
+        #countries = st.multiselect(
+        #"Choose countries", list(df.index), ["ZAR", "SLFA1"]
+        #)
+        data = df 
+        st.table(data)
+        #if not countries:
+        #    st.error("Please select at least one account.")
+        #else:
+            #data = df.loc[countries]
+            
             #data /= 1000000.0
             #st.write("### Gross Agricultural Production ($B)", data.sort_index())
 
