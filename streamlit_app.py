@@ -24,10 +24,11 @@ def read_file(filename):
 
 def get_UN_data():
     d = st.date_input("Select Date to view", datetime.now())
-    st.write('Your birthday is:', d) 
+    d_formatted = d.strftime("%Y%m%d")
+    st.write('Selected Date is', d_formatted) 
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
     AWS_S3_BUCKET = "sanne-eod"
-    key = "CashAccount_20220413_SLTWWF.csv"
+    key = "CashAccount_"+d_formatted+"_SLTWWF.csv"
     #content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
     df = pd.read_csv(f"s3://{AWS_S3_BUCKET}/{key}",)
     return df.set_index("InstrumentCode")
