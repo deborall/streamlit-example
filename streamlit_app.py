@@ -24,8 +24,10 @@ def read_file(filename):
 def get_UN_data():
     
     #AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
-    content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
-    df = pd.read_csv(content)
+    AWS_S3_BUCKET = "sanne-eod"
+    key = "CashAccount_20220413_SLTWWF.csv"
+    #content = read_file("sanne-eod/CashAccount_20220413_SLTWWF.csv")
+    df = pd.read_csv(f"s3://{AWS_S3_BUCKET}/{key}",)
     return df.set_index("InstrumentCode")
 
 try:
